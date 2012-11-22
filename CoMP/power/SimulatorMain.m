@@ -61,16 +61,43 @@ noise_DL = thermal_noise_density + 10 * log10( bandwidth_PRB ) + noise_figure_UE
 % Rx_level_all_ff =Rx_level_all+fast_fading_matrix;
 
 
-%%%%% SINR computation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%% SINR computation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% SNR_hard=zeros(size(distance,1),size(distance,2),2);
+% SNR_CoMP=zeros(size(distance,1),size(distance,2),2);
+% index_hard=zeros(size(distance,1),size(distance,2),2);
+% SNR_hard=cell(1,2);
+% SNR_CoMP=cell(1,2);
+% index_hard=cell(1,2);
+if ii==1
 for mm=1:2
     method=mm;
     if mm==1
-        [SNR_hard, SINR_hard,index_hard]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha);
+        [SNR_hard_ISD1,index_hard_ISD1]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha);
+        SNR_hard_temp=SNR_hard_ISD1;
     else
-        [SNR_CoMP, SINR_hard,no_index]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha);
+        [SNR_CoMP_ISD1,no_index_ISD1]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha);
+        SNR_CoMP_temp=SNR_CoMP_ISD1;
+    end
+    
+    
+end
+else
+    for mm=1:2
+    method=mm;
+    if mm==1
+        [SNR_hard_ISD2,index_hard_ISD2]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha);
+        SNR_hard_temp=SNR_hard_ISD2;
+    else
+        [SNR_CoMP_ISD2,no_index_ISD2]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha);
+        SNR_CoMP_temp=SNR_CoMP_ISD2;
+    end
     end
 end
 
+% SNR_hard(:,:,ii)=SNR_hard_temp;
+% SNR_CoMP(:,:,ii)=SINR_CoMP_temp;
+% index_hard(:,:,ii)=index_hard_temp;
+return;
 for xPixel_number_counter=1:xPixels
     for yPixel_number_counter= 1:yPixels
         if(index_hard(yPixel_number_counter,xPixel_number_counter)==1)
@@ -86,11 +113,12 @@ for xPixel_number_counter=1:xPixels
          hold on;
     end
 end
+hold off;
 
 
 
 
-plot3(xx,yy,SNR_hard);
+
 
 return;
 SNR_diff=SNR_CoMP-SNR_hard;
