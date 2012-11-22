@@ -12,45 +12,49 @@ close all;                           % Close opened figures
 
 
 %%%%%%Define simulation area and general parameters%%%%%%%%%%%%%%%%%%%%%%%
-number_snapshots = 500;
+number_snapshots = 1000;
 
-xInput=input('please input the ISD: \n0: ISD=500\n1: ISD=1732\n');
-while(1)
-if xInput==0
-    ISD =  500;                                % Inter-Site Distance: 500 m for 3GPP Case 1 (Macro 1), 1732 m for 3GPP Case 3 (Macro 3), 3000 m for Noise-Limited Case 
-    break;
-elseif xInput==1
-    ISD =1732;
-    break;
-else
-    fprintf('error input!\n');
-    xInput=input('enther again:\n');
-end
-end
+% xInput=input('please input the ISD: \n0: ISD=500\n1: ISD=1732\n');
+% while(1)
+% if xInput==0
+%     ISD =  500;                                % Inter-Site Distance: 500 m for 3GPP Case 1 (Macro 1), 1732 m for 3GPP Case 3 (Macro 3), 3000 m for Noise-Limited Case 
+%     break;
+% elseif xInput==1
+%     ISD =1732;
+%     break;
+% else
+%     fprintf('error input!\n');
+%     xInput=input('enther again:\n');
+% end
+% end
+% 
+% 
+% 
+% 
+% %%%%%Configure cells/basestations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fprintf('Enter the number of cells(2 or 3)\n');
+% xInput=input('0: 2 base stations(Scenario 1)\n1: 3 base stations(Scenario 2)\n');
+% while(1)
+% if xInput==0
+%     number_cells = 2;               % Number of cells  
+%     fprintf('Call the Scenario 1.\n');
+%     scenario=1;
+%     break;
+% elseif xInput==1
+%     number_cells = 3;
+%     fprintf('Call the Scenario 2.\n');
+%     scenario=2;
+%     break;
+% else
+%     fprintf('error input!\n');
+%     xInput=input('enther again:\n');
+% end
+% end
 
 
-
-
-%%%%%Configure cells/basestations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fprintf('Enter the number of cells(2 or 3)\n');
-xInput=input('0: 2 base stations(Scenario 1)\n1: 3 base stations(Scenario 2)\n');
-while(1)
-if xInput==0
-    number_cells = 2;               % Number of cells  
-    fprintf('Call the Scenario 1.\n');
-    scenario=1;
-    break;
-elseif xInput==1
-    number_cells = 3;
-    fprintf('Call the Scenario 2.\n');
-    scenario=2;
-    break;
-else
-    fprintf('error input!\n');
-    xInput=input('enther again:\n');
-end
-end
-
+for ii=1:2
+ISD =  500;  
+number_cells=3;
 monitored_cells = 1:number_cells;
 
 antenna_tower_height = 20;                   % Antenna tower height in meters based on simulation environment
@@ -60,7 +64,7 @@ BS_ground_height(1:number_cells) = 0;                         % Base station (eN
                                                     % automatically calculated!
 UE_height= 1.5;
 
-if scenario==2
+% if scenario==2
     resolution = 10;                           % in meters 
     xmin = 0;
     xmax = ISD;                                  
@@ -77,28 +81,32 @@ if scenario==2
     cell_location = [1i*ymax xmax/2 xmax+1i*ymax];
 
     
+% else
+%     resolution = 0.5;                           % in meters 
+%     xmin = 0;
+%     xmax = ISD;                                  
+%     ymin = 0;
+%     ymax =0; 
+%     xPixels = fix((xmax-xmin)/resolution) + 1;
+%     yPixels = fix((ymax-ymin)/resolution) + 1;
+%     [xx yy] = meshgrid( 1:xPixels, 1:yPixels );
+%     xx = (xx - 1) * resolution + xmin;
+%     yy = (yy - 1) * resolution + ymin;
+%     coverage_location = complex(xx,yy);
+%     coverage_location=flipud(coverage_location);
+%     cell_location = [1i*ymax  xmax+1i*ymax];
+% %     distance(1,:)= sqrt(coverage_location.^2+(antenna_tower_height-UE_height)^2)/1000;        %distance to base station 1
+% %     distance(2,:)= sqrt((ISD-coverage_location).^2+(antenna_tower_height-UE_height)^2)/1000;  %distance to base station 2
+% end
+
+
+
+if ii==1
+    BS_tx_power = 46;         % in dBm - Some evaluations to exploit carrier aggregation techniques may use wider bandwidths e.g. 60 or 80 MHz (FDD). For these evaluations [49 dBm] Total BS Tx power should be used.
 else
-    resolution = 0.5;                           % in meters 
-    xmin = 0;
-    xmax = ISD;                                  
-    ymin = 0;
-    ymax =0; 
-    xPixels = fix((xmax-xmin)/resolution) + 1;
-    yPixels = fix((ymax-ymin)/resolution) + 1;
-    [xx yy] = meshgrid( 1:xPixels, 1:yPixels );
-    xx = (xx - 1) * resolution + xmin;
-    yy = (yy - 1) * resolution + ymin;
-    coverage_location = complex(xx,yy);
-    coverage_location=flipud(coverage_location);
-    cell_location = [1i*ymax  xmax+1i*ymax];
-%     distance(1,:)= sqrt(coverage_location.^2+(antenna_tower_height-UE_height)^2)/1000;        %distance to base station 1
-%     distance(2,:)= sqrt((ISD-coverage_location).^2+(antenna_tower_height-UE_height)^2)/1000;  %distance to base station 2
+    BS_tx_power = 46-pow2db(3);   
 end
-
-
-
-
-BS_tx_power = 46;         % in dBm - Some evaluations to exploit carrier aggregation techniques may use wider bandwidths e.g. 60 or 80 MHz (FDD). For these evaluations [49 dBm] Total BS Tx power should be used.
+    
 cable_loss = 3; %2;                        % in dB
 rfhead_gain = 0;                           % RF Head Gain in dB (DL)
 
@@ -156,4 +164,13 @@ w_pha=phase_codebook_generate(nf);
 
 fprintf('\n You successfully accomplished setting simulation parameters and configuring the network!\n')
 
-SimulatorMain;           
+SimulatorMain;
+
+fprintf('\n Finished calculating, plotting.......!\n')
+ if ii==1
+        subplot(2,1,ii),drawF(xPixels,yPixels,SNR_CoMP_ISD1,SNR_hard_ISD1,BS_tx_power,resolution);
+ else
+        subplot(2,1,ii),drawF2(xPixels,yPixels,SNR_CoMP_ISD2,SNR_hard_ISD1,BS_tx_power,resolution);
+ end
+
+end
