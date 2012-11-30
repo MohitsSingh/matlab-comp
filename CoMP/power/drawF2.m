@@ -18,7 +18,7 @@ for xPixel_number_counter=1:xPixels
         elseif(1<=SNR_diff(yPixel_number_counter,xPixel_number_counter) && SNR_diff(yPixel_number_counter,xPixel_number_counter)<2)
             c5=scatter(xPixel_number_counter*resolution,yPixel_number_counter*resolution,'h','b');
 
-        elseif(2<=SNR_diff(yPixel_number_counter,xPixel_number_counter) && SNR_diff(yPixel_number_counter,xPixel_number_counter)<3)
+        elseif(2<=SNR_diff(yPixel_number_counter,xPixel_number_counter) && SNR_diff(yPixel_number_counter,xPixel_number_counter)<4)
             c6=scatter(xPixel_number_counter*resolution,yPixel_number_counter*resolution,'o','g');
 
         else
@@ -32,6 +32,6 @@ end
 xlabel('x-pixels(m)');
 ylabel('x-pixels(m)');
 title(['Power =',num2str(BS_tx_power),'dbm']);
-legend([c1,c2,c3,c4,c5,c6,c7],'CoMP-HHO<-4dB', '[-4,-2]dB', '[-2, 0]dB', '[0,1]dB', '[1,2]dB', '[2,3]dB', 'more than 3dB');
+legend([c1,c2,c3,c4,c5,c6,c7],'CoMP-HHO<-4dB', '[-4,-2]dB', '[-2, 0]dB', '[0,1]dB', '[1,2]dB', '[2,4]dB', 'more than 4dB');
 hold off;
 end
