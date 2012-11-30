@@ -1,5 +1,5 @@
 %%%%% Compute SINR, throughput, and other related metrics%%%%%%%%%%%%%%%%%%
-%%%%% Author: Beneyam B. Haile %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Author: Yiye Chen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [SNR,cell_idx_max]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha)
 
@@ -35,9 +35,7 @@ if method==2
                     hMax=max(max(abs(h)));
      
                 % computing desired signal
-                    Rx_level_max=db2pow(BS_tx_power-30)*(hMax^2)/50;   %in dB
-               % Computing SINR
-                    SNR_temp(NSS)= pow2db(Rx_level_max) - noise_DL;
+                    Rx_level_max(NSS)=db2pow(BS_tx_power-30)*(hMax^2)/50;   %in power
             
             % computing interference signal
 %             temp=sum( 10.^(Rx_level_all_ff(yPixel,xPixel,cell_idx_order(yPixel,xPixel,1:number_comp_cells,NSS),NSS)/10) );
@@ -45,11 +43,12 @@ if method==2
 %                 temp + 10^(noise_DL/10)  );
             
                end
-            SNR(yPixel,xPixel)=mean(SNR_temp);
+            Rx_signal(yPixel,xPixel)=mean(Rx_level_max);
             end
         
         end
-            cell_idx_max=0;
+            SNR=pow2db(Rx_signal)-noise_DL;
+            cell_idx_order=0;
 
 elseif method==1             %%%%means HHO
     
