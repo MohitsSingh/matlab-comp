@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Main function of the LTE Simulator%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Author: Beneyam B. Haile%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Date: October, 2012%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%% Main function of the CoMP Simulator %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Author: Yiye Chen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Date: Nov, 2012 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%Suite matlab environment and file path for simulation
@@ -12,7 +12,7 @@ close all;                           % Close opened figures
 
 
 %%%%%%Define simulation area and general parameters%%%%%%%%%%%%%%%%%%%%%%%
-number_snapshots = 1000;
+number_snapshots = 100;
 
 % xInput=input('please input the ISD: \n0: ISD=500\n1: ISD=1732\n');
 % while(1)
@@ -168,9 +168,9 @@ SimulatorMain;
 
 fprintf('\n Finished calculating, plotting.......!\n')
  if ii==1
-        subplot(2,1,ii),drawF(xPixels,yPixels,SNR_CoMP_ISD1,SNR_hard_ISD1,BS_tx_power,resolution);
+        figure(ii),drawF(xPixels,yPixels,SNR_CoMP_ISD1,SNR_hard_ISD1,BS_tx_power,resolution);
  else
-        subplot(2,1,ii),drawF2(xPixels,yPixels,SNR_CoMP_ISD2,SNR_hard_ISD1,BS_tx_power,resolution);
+        figure(ii),drawF2(xPixels,yPixels,SNR_CoMP_ISD2,SNR_hard_ISD1,BS_tx_power,resolution);
  end
 
 end
