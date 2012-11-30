@@ -1,7 +1,7 @@
 %%%%% Compute SINR, throughput, and other related metrics%%%%%%%%%%%%%%%%%%
-%%%%% Author: Beneyam B. Haile %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Author: Yiye Chen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [SNR, SINR,cell_idx_order]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha)
+function [SNR,cell_idx_order]=sinr_computation_comp(yPixels,xPixels,number_snapshots,BS_tx_power,noise_DL, h_matrix,method, w_pha)
 
 %%%%% Pre-allocation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % UE_cell_idx = zeros(UE_number,number_snapshots);
@@ -35,21 +35,20 @@ if method==2
                     hMax=max(max(abs(h)));
      
                 % computing desired signal
-                    Rx_level_max=db2pow(BS_tx_power-30)*(hMax^2)/50;   %in dB
-               % Computing SINR
-                    SINR_temp(NSS)= pow2db(Rx_level_max) - noise_DL;
+                    Rx_level_max(NSS)=db2pow(BS_tx_power-30)*(hMax^2)/50;   %in dB
             
             % computing interference signal
 %             temp=sum( 10.^(Rx_level_all_ff(yPixel,xPixel,cell_idx_order(yPixel,xPixel,1:number_comp_cells,NSS),NSS)/10) );
 %             all_interference_ff(yPixel,xPixel,NSS)=10*log10( sum(10.^(Rx_level_all_ff(yPixel,xPixel,:,NSS)/10),2) -...
 %                 temp + 10^(noise_DL/10)  );
             
-               end
-            SINR(yPixel,xPixel)=mean(SINR_temp);
+                end
+            Rx_signal(yPixel,xPixel)=mean(Rx_level_max);
+            
             end
         
         end
-            SNR=SINR;
+            SNR=pow2db(Rx_signal)-noise_DL;
             cell_idx_order=0;
 
 elseif method==1             %%%%means HHO
@@ -59,22 +58,15 @@ elseif method==1             %%%%means HHO
        [Rx_level_all_ff_order, cell_idx_order]=sort(Rx_level_all_ff_mean,3, 'descend'); %[Rx_level_all_ff_order, cell_idx_order]=sort(Rx_level_all_ff_mean,3 or 2, 'descend');
        Rx_level_max_linear=Rx_level_all_ff_order(:,:,1);
        Rx_level_max=pow2db(Rx_level_max_linear);
-       Rx_level_all_ff_linear_sum=sum(Rx_level_all_ff_mean,3);
-       all_interference_ff_linear=Rx_level_all_ff_linear_sum-Rx_level_max_linear;
-       all_interference_ff_db=pow2db(all_interference_ff_linear);
-       noise_DL_linear=db2pow(noise_DL);
-       IN_db=pow2db(all_interference_ff_linear+noise_DL_linear);
+%        Rx_level_all_ff_linear_sum=sum(Rx_level_all_ff_mean,3);
+%        all_interference_ff_linear=Rx_level_all_ff_linear_sum-Rx_level_max_linear;
+%        all_interference_ff_db=pow2db(all_interference_ff_linear);
+%        noise_DL_linear=db2pow(noise_DL);
+%        IN_db=pow2db(all_interference_ff_linear+noise_DL_linear);
    
     % Computing SINR
-       SINR = Rx_level_max - IN_db;
+%        SINR = Rx_level_max - IN_db;
        SNR= Rx_level_max-noise_DL;
 end
        
 end
-
-
-
-
-
-
-
